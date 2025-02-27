@@ -47,4 +47,6 @@ FindAll
 FindByPk
 FindAndCountAll
 
+Destroy
+
  */

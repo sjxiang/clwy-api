@@ -86,23 +86,28 @@ func (h *Handler) AllNotices(w http.ResponseWriter, r *http.Request) {
 
 
 type createNoticeRequest struct {
-	Title   string `json:"title"`
-	Content string `json:"content"`
+	Title   string   `json:"title" validate:"required,max=100"`
+	Content string   `json:"content" validate:"required,max=10000"`
 }
-
 
 /**
  * 创建公告
  * POST /admin/notices
  */
 func (h *Handler) CreateNotice(w http.ResponseWriter, r *http.Request) {
+	
 	var req createNoticeRequest
 	
 	if err := readJSON(w, r, &req); err != nil {
 		h.badRequestResponse(w, r, err)
 		return
 	}
-	
+	// 参数校验	
+	if err := Validate.Struct(&req); err != nil {
+		h.badRequestResponse(w, r, err)
+		return
+	}
+
 	ctx := context.TODO()
 
 	arg := db.CreateNoticeParams{
@@ -156,12 +161,12 @@ func (h *Handler) DeleteNotice(w http.ResponseWriter, r *http.Request) {
 
 
 type updateNoticeRequest struct {
-	Title   string `json:"title"`
-	Content string `json:"content"`
+	Title   string   `json:"title" validate:"required,max=100"`
+	Content string   `json:"content" validate:"required,max=1000"`
 }
 
 /*
- * 编辑公告
+ * 更新公告
  * PUT /admin/notices/:id
  */
 func (h *Handler) UpdateNotice(w http.ResponseWriter, r *http.Request) {
@@ -173,7 +178,12 @@ func (h *Handler) UpdateNotice(w http.ResponseWriter, r *http.Request) {
 	}
   
 	var req updateNoticeRequest
+	
 	if err := readJSON(w, r, &req); err != nil {
+		h.badRequestResponse(w, r, err)
+		return
+	}
+	if err := Validate.Struct(&req); err != nil {
 		h.badRequestResponse(w, r, err)
 		return
 	}
@@ -192,13 +202,13 @@ func (h *Handler) UpdateNotice(w http.ResponseWriter, r *http.Request) {
 			h.notFoundResponse(w, r, err)
 			return
 		default:
-			h.logger.Errorw("编辑公告失败", "status", false, "err", err)
+			h.logger.Errorw("更新公告失败", "status", false, "err", err)
 			h.internalServerError(w, r, err)
 			return
 		}
 	}
 
-	if err := h.jsonResponse(w, http.StatusOK, "编辑公告成功"); err != nil {
+	if err := h.jsonResponse(w, http.StatusOK, "更新公告成功"); err != nil {
 		h.internalServerError(w, r, err)
 	}
 }

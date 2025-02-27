@@ -1,0 +1,5 @@
+{"level":"info","ts":"2025-02-27 22:39:22","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-02-27 22:39:22","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-02-27 22:55:40","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-02-27 22:55:40","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"warn","ts":"2025-02-27 22:55:45","caller":"handlers/respond.go:20","msg":"bad request%!(EXTRA string=method, string=POST, string=path, string=/admin/notices, string=error, string=Key: 'createNoticeRequest.Title' Error:Field validation for 'Title' failed on the 'required' tag)","service":"gua"}

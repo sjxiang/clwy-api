@@ -64,7 +64,7 @@ func (h *Handler) SetupRoutes() {
 			r.Post("/", h.CreateNotice)
 			// 删除公告
 			r.Delete("/{id}", h.DeleteNotice)	
-			// 编辑公告
+			// 更新公告
 			r.Put("/{id}", h.UpdateNotice)
 			
 		})

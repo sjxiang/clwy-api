@@ -3,7 +3,19 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/go-playground/validator/v10"
 )
+
+
+// 定义一个全局的验证器实例
+var Validate *validator.Validate
+
+func init() {
+	// 启用了对结构体字段的必需性检查, 即 `validate:"required"` 标签
+	Validate = validator.New(validator.WithRequiredStructEnabled())
+}
+
 
 
 // 将数据编码为 JSON 格式并写入 HTTP 响应中, 同时设置正确的响应头和状态码
