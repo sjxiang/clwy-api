@@ -17,26 +17,6 @@ CREATE DATABASE IF NOT EXISTS `clwy_api_development`;
 USE `clwy_api_development`;
 
 
--- 创建 users 表
-CREATE TABLE `users` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nickname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `avatar` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `sex` smallint NOT NULL DEFAULT '0',
-  `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `intro` text COLLATE utf8mb4_unicode_ci,
-  `role` smallint NOT NULL DEFAULT '0',
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-
-
 -- 创建 notices 表
 
 CREATE TABLE `notices` (
@@ -63,7 +43,7 @@ VALUES
 
 
 
--- 修改
+-- 编辑
 UPDATE `notices` 
 SET `title` = 'tk教主语录', `content` = '要尽可能生活在离文明中心近的地方，纵然北上广有千般不是，奈何文明边缘地带有亿般不是。' 
 WHERE `id` = 1;
@@ -74,7 +54,7 @@ DELETE FROM `notices` WHERE `id` = 3;
 -- 查询
 SELECT * FROM `notices` WHERE `id` = 1;
 
--- 公告列表, 分页 + 模糊搜索
+-- 列表, 分页 + 模糊搜索
 SELECT `id`, `title`, `content`, `created_at`, `updated_at`
 FROM `notices`
 WHERE `title` LIKE '%折扣牛%'
@@ -82,8 +62,28 @@ ORDER BY updated_at DESC
 LIMIT 0, 10;
 
 
--- 最新公告 (按 created_at 从晚到早排序, 即降序)  
-SELECT `title`, `created_at` FROM `posts` ORDER BY `created_at` DESC;
+
+-- 创建 users 表
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nickname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sex` smallint NOT NULL DEFAULT '0',
+  `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `intro` text COLLATE utf8mb4_unicode_ci,
+  `role` smallint NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 INSERT INTO `settings` (`name`, `icp`, `copyright`) VALUES ('bbs论坛', '苏ICP备123456789号', '© 2023 bbs论坛 版权所有');
+
+
+

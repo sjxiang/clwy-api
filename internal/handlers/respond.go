@@ -31,7 +31,7 @@ func (h *Handler) conflictResponse(w http.ResponseWriter, r *http.Request, err e
 }
 
 // 404
-// 资源未找到
+// 记录不存在
 func (h *Handler) notFoundResponse(w http.ResponseWriter, r *http.Request, err error) {
 	h.logger.Warnw("not found error", "method", r.Method, "path", r.URL.Path, "error", err.Error())
 

@@ -141,7 +141,7 @@ type GetNoticesWithPaginationParams struct {
 }
 
 type PaginationResult struct {
-	Data        []Notice `json:"data"`
+	Notices     []Notice `json:"notices"`
 	Total       int64    `json:"total"`        // 总数据量
 	TotalPages  int64    `json:"total_pages"`  // 总页数
 	CurrentPage int64    `json:"current_page"` // 当前页码
@@ -156,9 +156,9 @@ func (d *DB) GetNoticesWithPagination(ctx context.Context, arg *GetNoticesWithPa
 
 	// SQL 1
 	query, args := buildDynamicSQL(`
-		SELECT id, title, content, created_at, updated_at
+		SELECT id, title, created_at, updated_at
 		FROM notices
-	`, arg)
+	`, arg.SearchKey, arg.Offset, arg.Limit)
 
 	rows, err := d.db.QueryContext(ctx, query, args...)
 	if err != nil {
@@ -174,7 +174,6 @@ func (d *DB) GetNoticesWithPagination(ctx context.Context, arg *GetNoticesWithPa
 		err := rows.Scan(
 			&i.ID,
 			&i.Title,
-			&i.Content,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		)
@@ -193,7 +192,7 @@ func (d *DB) GetNoticesWithPagination(ctx context.Context, arg *GetNoticesWithPa
 	countQuery, countArgs := buildDynamicSQL(`
 		SELECT COUNT(*)
 		FROM notices
-	`, arg)
+	`, arg.SearchKey, arg.Offset, arg.Limit)
 
 	var total int64
 	if err = d.db.QueryRowContext(ctx, countQuery, countArgs...).Scan(&total); err != nil {
@@ -207,7 +206,7 @@ func (d *DB) GetNoticesWithPagination(ctx context.Context, arg *GetNoticesWithPa
 	}
 
 	return &PaginationResult{
-		Data:        items,
+		Notices:     items,
 		Total:       total,
 		TotalPages:  totalPages,
 		CurrentPage: arg.Offset / arg.Limit + 1,
@@ -216,7 +215,7 @@ func (d *DB) GetNoticesWithPagination(ctx context.Context, arg *GetNoticesWithPa
 
 
 // 动态构建 SQL
-func buildDynamicSQL(basicSQL string, arg *GetNoticesWithPaginationParams) (string, []interface{}) {
+func buildDynamicSQL(basicSQL string, searchKey string, offset, limit int64) (string, []interface{}) {
 	
 	var query strings.Builder
 
@@ -226,16 +225,17 @@ func buildDynamicSQL(basicSQL string, arg *GetNoticesWithPaginationParams) (stri
 	query.WriteString(basicSQL)
 
 	// 模糊搜索
-	if arg.SearchKey != "" {
+	if searchKey != "" {
 		query.WriteString("WHERE title LIKE ? ")
-		args = append(args, "%" + arg.SearchKey + "%")
+		args = append(args, "%" + searchKey + "%")
 	}
 
 	// 排序和分页
 	query.WriteString("ORDER BY updated_at DESC ")
 	query.WriteString("LIMIT ?, ?")
-	args = append(args, arg.Offset, arg.Limit)
+	args = append(args, offset, limit)
 	
+
 	fmt.Println(query.String())
 	fmt.Println(args)
 	return query.String(), args

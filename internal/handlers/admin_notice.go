@@ -63,10 +63,8 @@ func (h *Handler) AllNotices(w http.ResponseWriter, r *http.Request) {
 
 	title := readQueryParam(r, "title")
 
-	h.logger.Infow("查询公告列表", "status", true, "title", title, "current_page", currentPage, "page_size", pageSize)
 	ctx := context.TODO()
 
-	
 	arg := db.GetNoticesWithPaginationParams{
 		SearchKey: title,
 		Limit:     pageSize,
@@ -85,6 +83,7 @@ func (h *Handler) AllNotices(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
 
 type createNoticeRequest struct {
 	Title   string `json:"title"`
@@ -150,7 +149,7 @@ func (h *Handler) DeleteNotice(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := h.jsonResponse(w, http.StatusOK, nil); err != nil {
+	if err := h.jsonResponse(w, http.StatusOK, "删除公告成功"); err != nil {
 		h.internalServerError(w, r, err)
 	}
 }
@@ -193,13 +192,13 @@ func (h *Handler) UpdateNotice(w http.ResponseWriter, r *http.Request) {
 			h.notFoundResponse(w, r, err)
 			return
 		default:
-			h.logger.Errorw("更新公告失败", "status", false, "err", err)
+			h.logger.Errorw("编辑公告失败", "status", false, "err", err)
 			h.internalServerError(w, r, err)
 			return
 		}
 	}
 
-	if err := h.jsonResponse(w, http.StatusOK, nil); err != nil {
+	if err := h.jsonResponse(w, http.StatusOK, "编辑公告成功"); err != nil {
 		h.internalServerError(w, r, err)
 	}
 }
