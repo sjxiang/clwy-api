@@ -49,12 +49,13 @@ func (h *Handler) GetNotice(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) AllNotices(w http.ResponseWriter, r *http.Request) {
 
 	// 参数校验
+	// 当前是第几页, 如果不传则默认为第1页
 	currentPage, err := parseQueryParamToInt64(r, "current_page", 1)
 	if err != nil {
 		h.badRequestResponse(w, r, err)
 		return
 	}
-
+	// 每页显示多少条数据, 如果不传则默认为10条
 	pageSize, err := parseQueryParamToInt64(r, "page_size", 10)
 	if err != nil {
 		h.badRequestResponse(w, r, err)
@@ -85,9 +86,10 @@ func (h *Handler) AllNotices(w http.ResponseWriter, r *http.Request) {
 }
 
 
+
 type createNoticeRequest struct {
-	Title   string   `json:"title" validate:"required,max=100"`
-	Content string   `json:"content" validate:"required,max=10000"`
+    Title   string `json:"title" validate:"required,min=2,max=45"`  // 标题长度 2~45, 标题不能为空
+    Content string `json:"content" validate:"required,max=10000"`  // 内容长度 <=10000
 }
 
 /**
@@ -161,8 +163,8 @@ func (h *Handler) DeleteNotice(w http.ResponseWriter, r *http.Request) {
 
 
 type updateNoticeRequest struct {
-	Title   string   `json:"title" validate:"required,max=100"`
-	Content string   `json:"content" validate:"required,max=1000"`
+	Title   string `json:"title" validate:"required,min=2,max=45"`  
+    Content string `json:"content" validate:"required,max=10000"`  
 }
 
 /*

@@ -137,7 +137,7 @@ func (d *DB) UpdateNotice(ctx context.Context, arg *UpdateNoticeParams) error {
 type GetNoticesWithPaginationParams struct {
 	SearchKey  string `json:"title"`
 	Limit      int64  `json:"limit"`
-	Offset     int64  `json:"offset"`
+	Offset     int64  `json:"offset"`  // skip
 }
 
 type PaginationResult struct {

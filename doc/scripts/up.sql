@@ -54,7 +54,7 @@ DELETE FROM `notices` WHERE `id` = 3;
 -- 查询
 SELECT * FROM `notices` WHERE `id` = 1;
 
--- 列表, 分页 + 模糊搜索
+-- 分页 + 模糊搜索
 SELECT `id`, `title`, `content`, `created_at`, `updated_at`
 FROM `notices`
 WHERE `title` LIKE '%折扣牛%'
@@ -65,6 +65,7 @@ LIMIT 0, 10;
 
 -- 创建 users 表
 CREATE TABLE `users` (
+
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nickname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -83,7 +84,40 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-INSERT INTO `settings` (`name`, `icp`, `copyright`) VALUES ('bbs论坛', '苏ICP备123456789号', '© 2023 bbs论坛 版权所有');
+
+-- 创建 categories 表
+
+
+    -- id: Mapped[int] = mapped_column(Integer, primary_key=True)           
+    -- name: Mapped[str] = mapped_column(String(255), unique=True)                       
+    -- rank: Mapped[int] = mapped_column(SmallInteger, server_default='1')  
+    
+    
+    -- def to_dict(self):
+    --     return {
+    --         '编号': self.id,
+    --         '分类名称': self.name,
+    --         '排序': self.rank,
+    --     }
+
+
+
+-- 创建 settings 表
+CREATE TABLE `settings` (
+    `id` integer unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目名称',
+    `icp` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '备案号',
+    `copyright` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '版权信息',
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+        
+INSERT INTO `settings` 
+    (`id`, `name`, `icp`, `copyright`) 
+VALUES 
+    (1, '长乐未央课程网站', '苏ICP备123456789号', '© 2025 长乐未央课程网站 版权所有');
 
 
 
