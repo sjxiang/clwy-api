@@ -25,19 +25,24 @@ type Category struct {
 
 // 课程
 type Course struct {
-	ID            int64     `json:"id"`
+	ID            int64     `json:"id"`        
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
-	CategoryID    int64     `json:"category_id"`
-	UserID        int64     `json:"user_id"`
-	Name          string    `json:"name"`
-	Image         string    `json:"image"`
-	Recommended   bool      `json:"recommended"`
-	Introductory  bool      `json:"introductory"`
-	Content       string    `json:"content"`
-	LikesCount    int64     `json:"likes_count"`
-	ChaptersCount int64     `json:"chapters_count"`	
+	Name          string    `json:"name"`           // 课程名称 
+	Image         string    `json:"image"`          // 课程图片
+	Recommended   bool      `json:"recommended"`    // 是否推荐
+	Introductory  bool      `json:"introductory"`   // 是否为入门课程
+	Content       string    `json:"content"`        // 课程内容
+	LikesCount    int64     `json:"likes_count"`    // 课程的点赞数
+	ChaptersCount int64     `json:"chapters_count"`	// 课程的章节数量
+	
+	CategoryID    int64     `json:"category_id"`    // 课程分类
+	UserID        int64     `json:"user_id"`        // 课程讲师
+	
+	Author        User      `json:"author"`         // 课程的作者
+	Chapters      []Chapter `json:"chapters"`       // 课程的章节
 }
+
 
 
 // 章节

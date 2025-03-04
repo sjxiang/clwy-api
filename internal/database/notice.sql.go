@@ -75,7 +75,7 @@ type CreateNoticeParams struct {
 	Content string `json:"content"`
 }
 
-func (d *DB) CreateNotice(ctx context.Context, arg *CreateNoticeParams) (int64, error) {
+func (d *DB) CreateNotice(ctx context.Context, arg *CreateNoticeParams) error {
 
 	stmt := `
 		INSERT INTO notices 
@@ -89,15 +89,18 @@ func (d *DB) CreateNotice(ctx context.Context, arg *CreateNoticeParams) (int64, 
 	
 	result, err := d.db.ExecContext(ctx, stmt, arg.Title, arg.Content)
 	if err!= nil {
-		return 0, err
+		return err
 	}
 	
-	id , err := result.LastInsertId()
-	if err!= nil {
-		return 0, err
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
 	}
-	
-	return id, nil
+	if rowsAffected == 0 {
+		return ErrAlreadyExists
+	}
+
+	return err
 }
 
 type UpdateNoticeParams struct {

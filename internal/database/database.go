@@ -16,6 +16,7 @@ type DB struct {
 	db *sql.DB
 }
 
+
 func New(connStr string) (*DB, error) {
 	db, err := sql.Open("mysql", connStr)
 	if err != nil {

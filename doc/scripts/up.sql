@@ -61,45 +61,47 @@ WHERE `title` LIKE '%折扣牛%'
 ORDER BY updated_at DESC
 LIMIT 0, 10;
 
-
-
+        
 -- 创建 users 表
 CREATE TABLE `users` (
-
-  `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nickname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `avatar` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `sex` smallint NOT NULL DEFAULT '0',
-  `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `intro` text COLLATE utf8mb4_unicode_ci,
-  `role` smallint NOT NULL DEFAULT '0',
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`)
+    `id` integer unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+    `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
+    `nickname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '昵称',
+    `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码',
+    `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '邮箱',
+    `avatar` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '头像',
+    `sex` smallint NOT NULL DEFAULT '0' COMMENT '性别',
+    `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '公司.学校名',
+    `intro` text COLLATE utf8mb4_unicode_ci COMMENT '简介',
+    `role` TINYINT NOT NULL DEFAULT '0' COMMENT '用户组',
+    `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_username` (`username`),
+    UNIQUE KEY `idx_email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 
 -- 创建 categories 表
 
+CREATE TABLE `categories` (
+    `id` integer unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '分类名称',
+    `rank` integer unsigned NOT NULL DEFAULT '1' COMMENT '排序',
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-    -- id: Mapped[int] = mapped_column(Integer, primary_key=True)           
-    -- name: Mapped[str] = mapped_column(String(255), unique=True)                       
-    -- rank: Mapped[int] = mapped_column(SmallInteger, server_default='1')  
-    
-    
-    -- def to_dict(self):
-    --     return {
-    --         '编号': self.id,
-    --         '分类名称': self.name,
-    --         '排序': self.rank,
-    --     }
-
+INSERT INTO `categories` 
+    (`id`, `name`, `rank`) 
+VALUES 
+    (10, '前端开发', 1), 
+    (11, '后端开发', 2), 
+    (12, '数据库', 3), 
+    (13, '服务器运维', 4), 
+    (14, '测试', 5);
 
 
 -- 创建 settings 表
@@ -121,3 +123,53 @@ VALUES
 
 
 
+-- 创建 courses 表
+
+CREATE TABLE `courses` (
+    `id` integer unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+    `category_id` integer unsigned NOT NULL COMMENT '分类编号',
+    `user_id` integer unsigned NOT NULL COMMENT '用户编号',
+    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '课程名称',
+    `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '课程图片',
+    `recommended` smallint NOT NULL DEFAULT '0' COMMENT '是否推荐',
+    `introductory` smallint NOT NULL DEFAULT '0' COMMENT '是否为入门课程',
+    `content` text COLLATE utf8mb4_unicode_ci COMMENT '课程内容',
+    `likes_count` integer unsigned NOT NULL DEFAULT '0' COMMENT '课程的点赞数',
+    `chapters_count` integer unsigned NOT NULL DEFAULT '0' COMMENT '课程的章节数量',
+    `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_category_id` (`category_id`),
+    KEY `idx_user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+-- 创建 chapters 表
+        
+CREATE TABLE `chapters` (
+    `id` integer unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+    `course_id` integer unsigned NOT NULL COMMENT '课程编号',
+    `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '章节标题',
+    `content` text COLLATE utf8mb4_unicode_ci COMMENT '章节内容',
+    `video` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '章节视频',
+    `rank` integer unsigned NOT NULL DEFAULT '1' COMMENT '排序',
+    `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_course_id` (`course_id`)
+)  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- 创建 likes 表
+        
+create table `likes` (
+    `id` integer unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+    `course_id` integer unsigned NOT NULL COMMENT '课程编号',
+    `user_id` integer unsigned NOT NULL COMMENT '用户编号',
+    `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_course_id` (`course_id`),
+    KEY `idx_user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

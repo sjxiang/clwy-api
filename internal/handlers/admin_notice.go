@@ -2,11 +2,13 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"net/http"
-	
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
 	db "clwy-api/internal/database"
 )
-
 
 /**
  * 查询公告详情
@@ -117,14 +119,20 @@ func (h *Handler) CreateNotice(w http.ResponseWriter, r *http.Request) {
 		Content: req.Content,
 	}
 
-	id, err := h.db.CreateNotice(ctx, &arg)
+	err := h.db.CreateNotice(ctx, &arg)
 	if err!= nil {
+		if errors.Is(err, db.ErrAlreadyExists) {
+			h.logger.Infow("公告已存在", "status", true)
+			h.conflictResponse(w, r, err)
+			return
+		}
+
 		h.logger.Errorw("创建公告失败", "status", false, "err", err)
 		h.internalServerError(w, r, err)
 		return
 	}
 
-	if err := h.jsonResponse(w, http.StatusCreated, id); err != nil {
+	if err := h.jsonResponse(w, http.StatusCreated, nil); err != nil {
 		h.internalServerError(w, r, err)
 	}
 }
@@ -134,9 +142,11 @@ func (h *Handler) CreateNotice(w http.ResponseWriter, r *http.Request) {
  * DELETE /admin/notices/:id
  */
 func (h *Handler) DeleteNotice(w http.ResponseWriter, r *http.Request) {
-	id, err := getInt64FromPathParam(r)
+	idParam := chi.URLParam(r, "id")
+
+	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		h.badRequestResponse(w, r, err)
+		h.internalServerError(w, r, err)
 		return
 	}
 
@@ -156,7 +166,7 @@ func (h *Handler) DeleteNotice(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := h.jsonResponse(w, http.StatusOK, "删除公告成功"); err != nil {
+	if err := h.jsonResponse(w, http.StatusOK, nil); err != nil {
 		h.internalServerError(w, r, err)
 	}
 }
@@ -210,7 +220,7 @@ func (h *Handler) UpdateNotice(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := h.jsonResponse(w, http.StatusOK, "更新公告成功"); err != nil {
+	if err := h.jsonResponse(w, http.StatusOK, nil); err != nil {
 		h.internalServerError(w, r, err)
 	}
 }
