@@ -87,19 +87,11 @@ func (d *DB) CreateNotice(ctx context.Context, arg *CreateNoticeParams) error {
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 	
-	result, err := d.db.ExecContext(ctx, stmt, arg.Title, arg.Content)
+	_, err := d.db.ExecContext(ctx, stmt, arg.Title, arg.Content)
 	if err!= nil {
 		return err
 	}
 	
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return err
-	}
-	if rowsAffected == 0 {
-		return ErrAlreadyExists
-	}
-
 	return err
 }
 

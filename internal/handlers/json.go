@@ -58,4 +58,15 @@ func (h *Handler) jsonResponse(w http.ResponseWriter, status int, data any) erro
 	return writeJSON(w, status, &envelope{ Data: data})
 }
 
+func (h *Handler) jsonify(w http.ResponseWriter, status bool, message string, data any) error {
+	type envelope struct {
+		Status bool `json:"status"`
+		Message string `json:"message"`
+		Data any `json:"data,omitempty"`
+		
+	}
+
+	return writeJSON(w, http.StatusOK, &envelope{ Status: status, Message: message, Data: data})
+}
+
 

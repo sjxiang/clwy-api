@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"context"
-	"errors"
 	"net/http"
+	"fmt"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
@@ -28,11 +28,9 @@ func (h *Handler) GetNotice(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		switch err {
 		case db.ErrNotFound:
-			h.logger.Infow("公告未找到", "status", true)
-			h.notFoundResponse(w, r, err)
+			h.notFoundResponse(w, r, fmt.Errorf("ID %d 的分类未找到", id))
 			return
 		default:
-			h.logger.Errorw("查询公告失败", "status", false, "err", err)
 			h.internalServerError(w, r, err)
 			return
 		}
@@ -76,7 +74,6 @@ func (h *Handler) AllNotices(w http.ResponseWriter, r *http.Request) {
 	
 	result, err := h.db.GetNoticesWithPagination(ctx, &arg)
 	if err != nil {
-		h.logger.Errorw("查询公告列表失败", "status", false, "err", err)
 		h.internalServerError(w, r, err)
 		return
 	}
@@ -121,13 +118,6 @@ func (h *Handler) CreateNotice(w http.ResponseWriter, r *http.Request) {
 
 	err := h.db.CreateNotice(ctx, &arg)
 	if err!= nil {
-		if errors.Is(err, db.ErrAlreadyExists) {
-			h.logger.Infow("公告已存在", "status", true)
-			h.conflictResponse(w, r, err)
-			return
-		}
-
-		h.logger.Errorw("创建公告失败", "status", false, "err", err)
 		h.internalServerError(w, r, err)
 		return
 	}
@@ -156,11 +146,9 @@ func (h *Handler) DeleteNotice(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		switch err {
 		case db.ErrNotFound:
-			h.logger.Infow("公告未找到", "status", true)
-			h.notFoundResponse(w, r, err)
+			h.notFoundResponse(w, r, fmt.Errorf("ID %d 的分类未找到", id))
 			return
 		default:
-			h.logger.Errorw("删除公告失败", "status", false, "err", err)
 			h.internalServerError(w, r, err)
 			return
 		}
@@ -210,11 +198,9 @@ func (h *Handler) UpdateNotice(w http.ResponseWriter, r *http.Request) {
 	if err = h.db.UpdateNotice(ctx, &arg); err != nil {
 		switch err {
 		case db.ErrNotFound:
-			h.logger.Infow("公告未找到", "status", true)
-			h.notFoundResponse(w, r, err)
+			h.notFoundResponse(w, r, fmt.Errorf("ID %d 的分类未找到", id))
 			return
 		default:
-			h.logger.Errorw("更新公告失败", "status", false, "err", err)
 			h.internalServerError(w, r, err)
 			return
 		}

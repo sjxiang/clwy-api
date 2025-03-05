@@ -1,52 +1,49 @@
 package database
 
-import "context"
+import (
+	"context"
+	"errors"
+	"strings"
 
+	"github.com/go-sql-driver/mysql"
+)
 
 
 
 // return new_category.to_dict()
 type AddCategoryParams struct {
 	Name string `json:"name"`
-	Rank int64  `json:"rank"`
+	Rank int  `json:"rank"`
 }
 
 // 添加分类
 func (d *DB) AddCategory(ctx context.Context, arg *AddCategoryParams) error {
-	stmt := `
-		INSERT INTO categories
-			(name, rank)
-		VALUES
-			(?,?)
-	`
+	stmt := "INSERT INTO categories (`name`, `rank`) VALUES (?, ?)"
 
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
-	result, err := d.db.ExecContext(ctx, stmt, arg.Name, arg.Rank)
-	if err!= nil {
+
+	if _, err := d.db.ExecContext(ctx, stmt, arg.Name, arg.Rank); err != nil {
+		var mysqlError *mysql.MySQLError
+
+		if errors.As(err, &mysqlError) {
+			if mysqlError.Number == 1062 && strings.Contains(mysqlError.Message, "categories.idx_name") {
+				return ErrAlreadyExists
+			}
+		}
+
 		return err
 	}
 	
-	rowsAffected, err := result.RowsAffected()
-	if err!= nil {
-		return err
-	}
-	if rowsAffected == 0 {
-		return ErrAlreadyExists
-	}
-
-	return nil 
+	return nil
 }
 
 
 // 查询所有分类
 func (d *DB) GetAllCategories(ctx context.Context) ([]Category, error) {
-	stmt := `
-		SELECT id, name, rank
-		FROM categories
-		ORDER BY rank ASC, id ASC
-	`
+	stmt := "SELECT `id`, `name`, `rank` FROM categories ORDER BY `rank` ASC, `id` ASC"
+	
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 

@@ -58,7 +58,7 @@ func (h *Handler) SetupRoutes() {
 			
 			// 公告列表
 			r.Get("/", h.AllNotices)  
-			// 查询公告详情
+			// 公告详情
 			r.Get("/{id}", h.GetNotice) 
 			// 创建公告
 			r.Post("/", h.CreateNotice)
@@ -69,7 +69,33 @@ func (h *Handler) SetupRoutes() {
 			
 		})
 
+		r.Route("/categories", func(r chi.Router) {
+			
+			// 分类列表
+			r.Get("/", h.AllCategories)  
+			// 创建分类
+			r.Post("/", h.AddCategory)
+			// 删除分类
+			r.Delete("/{id}", h.DeleteCategory)	
+
+		})
+
+		r.Route("/courses", func(r chi.Router) {
+			
+		})
+
+		r.Route("/chapters", func(r chi.Router) {
 		
+		})
+
+		r.Route("/users", func(r chi.Router) {
+			
+		})
+
+		r.Route("/settings", func(r chi.Router) {
+			
+		})
+
 	})
 
 
