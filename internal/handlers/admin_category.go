@@ -52,7 +52,7 @@ func (h *Handler) AddCategory(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := h.jsonify(w, true, "查询分类列表成功", nil); err != nil {
+	if err := h.jsonify(w, true, "新增分类成功", nil); err != nil {
 		h.internalServerError(w, r, err)
 		return
 	}

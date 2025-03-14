@@ -28,7 +28,9 @@ func (d *DB) AddCategory(ctx context.Context, arg *AddCategoryParams) error {
 		var mysqlError *mysql.MySQLError
 
 		if errors.As(err, &mysqlError) {
-			if mysqlError.Number == 1062 && strings.Contains(mysqlError.Message, "categories.idx_name") {
+			has := strings.Contains(mysqlError.Message, "categories.idx_name")
+			
+			if has && mysqlError.Number == 1062{
 				return ErrAlreadyExists
 			}
 		}
