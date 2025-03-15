@@ -116,3 +116,5 @@ func (d *DB) GetAllCoursesByCategoryId(ctx context.Context, categoryId int64) ([
 
 	return items, nil
 }
+
+

@@ -16,8 +16,8 @@ type Notice struct {
 // 分类
 type Category struct {
 	ID        int64     `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"-"`
+	UpdatedAt time.Time `json:"-"`
 	Name      string    `json:"name"`
 	Rank      int64     `json:"rank"`
 }
@@ -87,7 +87,7 @@ type User struct {
 
 // 系统设置
 type Setting struct {
-	ID            int64     `json:"id"`
+	ID            int64     `json:"id,omitempty"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
 	Name          string    `json:"name"`

@@ -12,12 +12,12 @@ type UpdateSettingParams struct {
 	Copyright     string   
 }
 
-// 更改系统设置
+// 编辑系统设置
 func (d *DB) UpdateSetting(ctx context.Context, arg UpdateSettingParams) error {
 	stmt := `
 		UPDATE settings 
-		SET name =?, icp =?, coptyright =?
-		WHERE id = 1;
+		SET name =?, icp =?, copyright =?
+		WHERE id = 1
 	`
 
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
@@ -43,7 +43,7 @@ func (d *DB) UpdateSetting(ctx context.Context, arg UpdateSettingParams) error {
 // 查找系统设置, 写死了
 func (d *DB) GetSetting(ctx context.Context) (Setting, error) {
 	stmt := `
-		SELECT name, icp, coptyright 
+		SELECT name, icp, copyright, created_at, updated_at 
 		FROM settings 
 		WHERE id = 1
 	`
@@ -59,6 +59,8 @@ func (d *DB) GetSetting(ctx context.Context) (Setting, error) {
 		&i.Name,
 		&i.ICP,
 		&i.Copyright,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	
 	if err!= nil {

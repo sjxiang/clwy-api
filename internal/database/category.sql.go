@@ -2,13 +2,12 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
 )
-
-
 
 // return new_category.to_dict()
 type AddCategoryParams struct {
@@ -83,6 +82,19 @@ func (d *DB) GetAllCategories(ctx context.Context) ([]Category, error) {
 
 // 删除分类 (✅ 事务)
 func (d *DB) DeleteCategory(ctx context.Context, categoryId int64) error {
+	return withTx(d.db, ctx, func(tx *sql.Tx) error {
+		
+		err := deleteCategory(ctx, tx, categoryId)
+		if err != nil {
+			return err
+		}
+
+		return nil 
+	})
+}
+
+
+func deleteCategory(ctx context.Context, tx *sql.Tx, categoryId int64) error {
 	
 	stmt := `
 		DELETE FROM categories
@@ -91,7 +103,7 @@ func (d *DB) DeleteCategory(ctx context.Context, categoryId int64) error {
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 	
-	result, err := d.db.ExecContext(ctx, stmt, categoryId)
+	result, err := tx.ExecContext(ctx, stmt, categoryId)
 	if err!= nil {
 		return err
 	}
@@ -104,6 +116,6 @@ func (d *DB) DeleteCategory(ctx context.Context, categoryId int64) error {
 		return ErrNotFound
 	}
 
-	return nil 
+	return nil
 }
 

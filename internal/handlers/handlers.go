@@ -93,7 +93,10 @@ func (h *Handler) SetupRoutes() {
 		})
 
 		r.Route("/settings", func(r chi.Router) {
-			
+			// 编辑系统设置
+			r.Put("/", h.UpdateSetting)
+			// 查找当前系统设置
+			r.Get("/", h.GetSetting)	
 		})
 
 	})

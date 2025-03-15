@@ -36,6 +36,7 @@ func writeJSONError(w http.ResponseWriter, status int, message string) error {
 
 
 // 从 HTTP 请求中读取 JSON 数据, 并将其解码到指定的数据结构中, 同时限制请求体的大小, 并防止未知字段的出现
+// 或者 parseJSON
 func readJSON(w http.ResponseWriter, r *http.Request, data any) error {
 	maxBytes := 1_048_576
 
