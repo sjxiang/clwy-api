@@ -17,6 +17,7 @@ type AddCategoryParams struct {
 
 // 添加分类
 func (d *DB) AddCategory(ctx context.Context, arg *AddCategoryParams) error {
+	
 	stmt := "INSERT INTO categories (`name`, `rank`) VALUES (?, ?)"
 
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)

@@ -1,0 +1,6 @@
+
+
+处理 database/sql
+
+"updated_at": unsupported Scan, storing driver.Value type <nil> into type *time.Time"
+

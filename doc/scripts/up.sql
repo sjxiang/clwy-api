@@ -70,16 +70,22 @@ CREATE TABLE `users` (
     `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码',
     `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '邮箱',
     `avatar` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '头像',
-    `sex` smallint NOT NULL DEFAULT '0' COMMENT '性别',
+    `sex` smallint NOT NULL DEFAULT '9' COMMENT '性别, 默认为9, 0 为男性, 1 为女性, 9 为不选择',
     `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '公司.学校名',
     `intro` text COLLATE utf8mb4_unicode_ci COMMENT '简介',
-    `role` TINYINT NOT NULL DEFAULT '0' COMMENT '用户组',
+    `role` TINYINT NOT NULL DEFAULT '0' COMMENT '用户组, 默认为0, 0 表示普通用户, 100 表示管理员',
     `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_username` (`username`),
     UNIQUE KEY `idx_email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `users`
+    (`id`, `username`, `nickname`, `password`, `email`, `avatar`, `sex`, `company`, `intro`, `role`, `created_at`, `updated_at`)
+VALUES
+    (6, 'admin', '管理员', '$2a$10$KbT1.D6PkJY6A/KgfwuB6ucInSVLsArJyRSGVYOzBo3k0fJ1WaE42', 't.uif@qq.com', 'default.jpeg', 1, '扬州301组合', '啪啪啪小王子', 100, UTC_TIMESTAMP(), NULL),
+    (7, 'guest', '游客', '$2a$10$KbT1.D6PkJY6A/KgfwuB6ucInSVLsArJyRSGVYOzBo3k0fJ1WaE42', 'tyr@cisco.cn', 'default.jpeg', 0, '成都九眼桥', 'save the people', 0, UTC_TIMESTAMP(), NULL);
 
 
 
@@ -143,6 +149,20 @@ CREATE TABLE `courses` (
     KEY `idx_category_id` (`category_id`),
     KEY `idx_user_id` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `courses`
+    (`id`, `category_id`, `user_id`, `name`, `image`, `recommended`, `introductory`, `content`, `likes_count`, `chapters_count`, `created_at`, `updated_at`)    
+VALUES
+    (1, 10, 6, 
+    'Electron+Vue3+AI+云存储--实战跨平台桌面应用', 
+    'default.jpeg', 1, 1, 
+    '无论前端、后端，还是应届生，只要具备前端基础，想系统掌握Electron，及整合开发中疑难问题解决方案的，并希望将理论转化实践的，这门课程是你的不二之选。课程融合Electron、Vue3、AI及云存储，以项目为驱动，从零打造跨平台、智能化、高安全性及扩展性的桌面应用。全面应用并高效掌握Electron，及与主流技术整合的疑难问题解决。无论晋升涨薪、技能拓展，还是面试求职，都能让你在激烈竞争中脱颖而出！', 
+    9, 60, UTC_TIMESTAMP(), NULL),
+    (2, 11, 6, 
+    'AI助手Copilot辅助Go+Flutter打造全栈式在线教育系统', 
+    'default.jpeg', 1, 1, 
+    '无论是做后端、还是前端，缺乏大型项目实战经验都是技术进阶和职业晋升一大拦路虎。为了帮助大家突破技术与职业瓶颈，课程采用了高性能热门Go语言、跨平台利器Flutter及强大的PostgreSQL数据库，手把手带你打造一款大型功能全面的全栈在线教育系统（涵盖20+核心功能实现、30+复杂页面设计），同时教你借助AI，10倍+提升开发与学习效能。无论是毕设、求职、晋升、转型还是拓宽技术视野，都能让你受益匪浅。', 
+    10, 88, UTC_TIMESTAMP(), NULL);
 
 
 

@@ -89,7 +89,12 @@ func (h *Handler) SetupRoutes() {
 		})
 
 		r.Route("/users", func(r chi.Router) {
-			
+			// 添加用户
+			r.Post("/", h.AddUser)
+			// 查询用户列表
+			r.Get("/", h.AllUsers)
+			// 查询用户
+			r.Get("/{id}", h.GetUser)
 		})
 
 		r.Route("/settings", func(r chi.Router) {
@@ -99,6 +104,11 @@ func (h *Handler) SetupRoutes() {
 			r.Get("/", h.GetSetting)	
 		})
 
+		r.Route("/echarts", func(r chi.Router) {
+			r.Get("/sex", h.CountGenders)
+			r.Get("/user", h.CountUser)
+		})
+		
 	})
 
 

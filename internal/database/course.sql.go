@@ -3,8 +3,6 @@ package database
 import (
 	"time"
 	"context"
-	"errors"
-	"database/sql"
 )
 
 
@@ -98,13 +96,8 @@ func (d *DB) GetAllCoursesByCategoryId(ctx context.Context, categoryId int64) ([
 			&i.ChaptersCount,
 			&i.CreatedAt,
 			&i.UpdatedAt,
-		); 	err != nil {
-			switch {
-			case errors.Is(err, sql.ErrNoRows):
-				return nil, ErrNotFound
-			default:
-				return nil, err
-			}
+		); err != nil {
+			return nil, err
 		}
 	
 		items = append(items, i)
