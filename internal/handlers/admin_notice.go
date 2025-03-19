@@ -117,7 +117,7 @@ func (h *Handler) CreateNotice(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := h.db.CreateNotice(ctx, &arg)
-	if err!= nil {
+	if err != nil {
 		h.internalServerError(w, r, err)
 		return
 	}

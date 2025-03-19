@@ -9,7 +9,6 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-
 /*
 统计每个月的注册用户数量
 
@@ -316,4 +315,20 @@ func (d *DB) GetUserByUsername(ctx context.Context, username string) (*User, err
 
 func (d *DB) AllUsers(ctx context.Context) ([]User, error) {
 	return nil, nil
+}
+
+func existsUser(ctx context.Context, tx *sql.Tx, id int64) (bool, error) {
+	
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	var exists bool
+	stmt := "SELECT EXISTS(SELECT true FROM users WHERE id = ?)"
+	
+	err := tx.QueryRowContext(ctx, stmt, id).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	return exists, err
 }

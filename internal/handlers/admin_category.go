@@ -38,7 +38,7 @@ func (h *Handler) AddCategory(w http.ResponseWriter, r *http.Request) {
 
 	arg := db.AddCategoryParams{
 		Name: req.Name,
-		Rank: req.Rank,
+		Rank: int8(req.Rank),
 	}	
 	err := h.db.AddCategory(ctx, &arg)
 	if err != nil {
@@ -96,8 +96,11 @@ func (h *Handler) AddCategory(w http.ResponseWriter, r *http.Request) {
 	err = h.db.DeleteCategory(ctx, id)
 	if err != nil {
 		switch err {
+			case db.ErrAlreadyExists:
+			h.badRequestResponse(w, r, errors.New("当前分类有课程, 无法删除。"))
+			return
 		case db.ErrNotFound:
-			h.notFoundResponse(w, r, fmt.Errorf("ID %d 的分类未找到", id))
+			h.notFoundResponse(w, r, fmt.Errorf("ID %d 的分类不存在", id))
 			return
 		default:
 			h.internalServerError(w, r, err)
@@ -106,6 +109,40 @@ func (h *Handler) AddCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.jsonify(w, true, "删除分类成功", nil); err != nil {
+		h.internalServerError(w, r, err)
+		return
+	}
+}
+
+
+
+/**
+ * 查询分类详情
+ * GET /admin/categories/:id
+ */
+ func (h *Handler) GetCategory(w http.ResponseWriter, r *http.Request) {
+	
+	id, err := getInt64FromPathParam(r)
+	if err != nil {
+		h.badRequestResponse(w, r, err)
+		return
+	}
+
+	ctx := context.TODO()
+	
+	result, err := h.db.GetCategory(ctx, id)
+	if err != nil {
+		switch err {
+		case db.ErrNotFound:
+			h.notFoundResponse(w, r, fmt.Errorf("ID %d 的分类不存在", id))
+			return
+		default:
+			h.internalServerError(w, r, err)
+			return
+		}
+	}
+
+	if err := h.jsonify(w, true, "查询分类详情成功", result); err != nil {
 		h.internalServerError(w, r, err)
 		return
 	}

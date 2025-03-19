@@ -1,24 +1,59 @@
 package database
 
 import (
-	"time"
 	"context"
+	"database/sql"
+	"errors"
+	"strings"
+	"time"
+
+	"github.com/go-sql-driver/mysql"
 )
 
 
 type CreateCourseParams struct {
 	CategoryId   int64
-	Name         string
 	UserId       int64
+
+	Name         string
 	Image        string
+	Content      string
+	
 	Recommended  bool
 	Introductory bool
-	Content      string	
 }
 
 
 // 添加课程
 func (d *DB) CreateCourse(ctx context.Context, arg *CreateCourseParams) error {
+
+	return withTx(d.db, ctx, func(tx *sql.Tx) error {
+		
+		// 检查分类是否存在
+		exists, err := existsCategory(ctx, tx, arg.CategoryId)
+		if err != nil {
+			return err
+		}
+		if !exists {
+			return ErrNoRecord
+		}
+
+		// 检查用户是否存在
+		ok, err := existsUser(ctx, tx, arg.UserId)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return ErrNoRecord
+		}
+
+		// 插入数据
+		return insertCourse(ctx, tx, arg)
+	})    	
+}
+
+
+func insertCourse(ctx context.Context, tx *sql.Tx, arg *CreateCourseParams) error {
 	stmt := `
 		INSERT INTO courses
 			(category_id, name, user_id, image, recommended, introductory, content, likes_count, chapters_count, created_at, updated_at)
@@ -29,7 +64,7 @@ func (d *DB) CreateCourse(ctx context.Context, arg *CreateCourseParams) error {
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 	
-	result, err := d.db.ExecContext(ctx, stmt, 
+	if _, err := tx.ExecContext(ctx, stmt, 
 		arg.CategoryId, 
 		arg.Name, 
 		arg.UserId, 
@@ -40,39 +75,67 @@ func (d *DB) CreateCourse(ctx context.Context, arg *CreateCourseParams) error {
 		0, 
 		0, 
 		time.Now(), 
-		nil)
-	if err != nil {
+		nil); err != nil {
+		var mysqlError *mysql.MySQLError
+
+		if errors.As(err, &mysqlError) {
+			has := strings.Contains(mysqlError.Message, "users.idx_name")
+			
+			if has && mysqlError.Number == 1062 {
+				return ErrAlreadyExists
+			}
+		}
+
 		return err
 	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err!= nil {
-		return err
-	}
-	if rowsAffected == 0 {
-		return ErrAlreadyExists
-	}
-
+	
 	return nil
 }
 
 
+type FindAndCountAllCoursesParams struct {
+	KeyWord       string
+	Recommended   bool
+	Introductory  bool
+	Limit         int64
+	Offset        int64
+}
 
+type CoursesPaginationResult struct {
+	Courses     []Course `json:"courses"`
+	Total       int64    `json:"total"`        // 总数据量
+	TotalPages  int64    `json:"total_pages"`  // 总页数
+	CurrentPage int64    `json:"current_page"` // 当前页码
+}
 
-// 按 `分类编号` 查询所有课程 (✅)
-func (d *DB) GetAllCoursesByCategoryId(ctx context.Context, categoryId int64) ([]Course, error) {
+// 查询课程列表 (✅ 重写一个结构体 ForExport)
+func (d *DB) FindAndCountAllCourses(ctx context.Context, arg FindAndCountAllCoursesParams) (*CoursesPaginationResult, error) {
 
 	stmt := `
-		SELECT id, category_id, user_id, name, image, recommended, introductory, content, likes_count, chapters_count, created_at, updated_at
-		FROM courses
-		WHERE category_id = ?
-		ORDER BY id ASC
+	SELECT 
+	    c.name, c.image, c.recommended, c.introductory, c.content, c.likes_count, c.chapters_count,
+    	c.category_id, c.user_id,
+		u.username,
+    	ca.name AS category_name
+	FROM 
+		courses c
+	LEFT JOIN 
+		users u ON c.user_id = u.id
+	LEFT JOIN 
+		categories ca ON c.category_id = ca.id
+	WHERE 
+		c.name LIKE ? AND  -- 单个参数占位符
+		c.recommended = ? AND
+		c.introductory = ?
+	LIMIT 
+		?, ?
 	`
 
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 	
-	rows, err := d.db.QueryContext(ctx, stmt, categoryId)
+	likeParam := "%" + arg.KeyWord + "%"  
+	rows, err := d.db.QueryContext(ctx, stmt, likeParam, arg.Recommended, arg.Introductory, arg.Offset, arg.Limit)
 	if err!= nil {
 		return nil, err
 	}
@@ -82,11 +145,8 @@ func (d *DB) GetAllCoursesByCategoryId(ctx context.Context, categoryId int64) ([
 	
 	for rows.Next() {	
 		var i Course
-	
+
 		if err := rows.Scan(
-			&i.ID,
-			&i.CategoryID,
-			&i.UserID,
 			&i.Name,
 			&i.Image,
 			&i.Recommended,
@@ -94,8 +154,10 @@ func (d *DB) GetAllCoursesByCategoryId(ctx context.Context, categoryId int64) ([
 			&i.Content,
 			&i.LikesCount,
 			&i.ChaptersCount,
-			&i.CreatedAt,
-			&i.UpdatedAt,
+			&i.CategoryID,
+			&i.UserID,
+			&i.Author.Username,
+			&i.Category.Name,	
 		); err != nil {
 			return nil, err
 		}
@@ -107,7 +169,43 @@ func (d *DB) GetAllCoursesByCategoryId(ctx context.Context, categoryId int64) ([
 		return nil, err
 	}
 
-	return items, nil
+	// TODO: 统计总数
+	query := `
+	SELECT 
+		COUNT(*) 
+	FROM 
+		courses c
+	LEFT JOIN 
+		users u ON c.user_id = u.id
+	LEFT JOIN 
+		categories ca ON c.category_id = ca.id
+	WHERE 
+		c.name LIKE ? AND
+		c.recommended = ? AND
+		c.introductory = ?
+	`
+
+	var total int64
+	if err = d.db.QueryRowContext(ctx, query, likeParam, arg.Recommended, arg.Introductory).Scan(&total); err != nil {
+		return nil, err
+	}
+
+	// TODO: 计算总页数
+	totalPages := total / arg.Limit
+	if total%arg.Limit != 0 {
+		totalPages++
+	}
+
+	// TODO: 计算当前页码
+	currentPage := arg.Offset / arg.Limit + 1
+
+	return &CoursesPaginationResult{
+		Courses: items,
+		Total: total,
+		TotalPages: totalPages,
+		CurrentPage: currentPage,
+	}, nil
 }
+
 
 

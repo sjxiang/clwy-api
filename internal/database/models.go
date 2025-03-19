@@ -25,6 +25,8 @@ type Category struct {
 
 	Name      string    `json:"name"`
 	Rank      int64     `json:"rank"`
+
+	Coureses  []Course  `json:"courses,omitempty"`
 }
 func (c *Category) TableName() string {
 	return "categories"
@@ -49,7 +51,9 @@ type Course struct {
 	UserID        int64     `json:"user_id"`        // 课程讲师
 	
 	Author        User      `json:"author"`         // 课程的作者
-	Chapters      []Chapter `json:"chapters"`       // 课程的章节
+	Category      Category  `json:"category"`       // 课程的分类
+
+	Chapters      []Chapter `json:"chapters,omitempty"`       // 课程的章节
 }
 
 func (c *Course) TableName() string {

@@ -16,7 +16,7 @@ type UpdateSettingParams struct {
 func (d *DB) UpdateSetting(ctx context.Context, arg UpdateSettingParams) error {
 	stmt := `
 		UPDATE settings 
-		SET name =?, icp =?, copyright =?
+		SET name = ?, icp = ?, copyright = ?
 		WHERE id = 1
 	`
 

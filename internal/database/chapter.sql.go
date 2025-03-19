@@ -13,7 +13,6 @@ func (d *DB) GetAllChaptersByCourseId(ctx context.Context, courseId int64) ([]Ch
 
 // 添加章节
 func (d *DB) AddChapter(ctx context.Context, chapter *Chapter) error {
-	
 	return nil
 }
 

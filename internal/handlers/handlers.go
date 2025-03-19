@@ -77,11 +77,19 @@ func (h *Handler) SetupRoutes() {
 			r.Post("/", h.AddCategory)
 			// 删除分类
 			r.Delete("/{id}", h.DeleteCategory)	
-
+			// 查询分类详情
+			r.Get("/{id}", h.GetCategory)
 		})
 
 		r.Route("/courses", func(r chi.Router) {
-			
+			// 添加课程
+			r.Post("/", h.AddCourse)
+			// 删除课程
+
+			// 课程列表
+			r.Get("/", h.AllCourses)
+
+			// 
 		})
 
 		r.Route("/chapters", func(r chi.Router) {
@@ -108,7 +116,7 @@ func (h *Handler) SetupRoutes() {
 			r.Get("/sex", h.CountGenders)
 			r.Get("/user", h.CountUser)
 		})
-		
+
 	})
 
 

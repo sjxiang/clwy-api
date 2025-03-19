@@ -87,13 +87,13 @@ func (d *DB) CreateNotice(ctx context.Context, arg *CreateNoticeParams) error {
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 	
-	_, err := d.db.ExecContext(ctx, stmt, arg.Title, arg.Content)
-	if err!= nil {
+	if _, err := d.db.ExecContext(ctx, stmt, arg.Title, arg.Content); err != nil {
 		return err
 	}
 	
-	return err
+	return nil 
 }
+
 
 type UpdateNoticeParams struct {
 	ID      int64  `json:"id"`

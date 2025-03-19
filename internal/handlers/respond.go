@@ -25,8 +25,8 @@ func (h *Handler) badRequestResponse(w http.ResponseWriter, r *http.Request, err
 // 409
 // 编辑冲突
 func (h *Handler) conflictResponse(w http.ResponseWriter, r *http.Request, err error) {
-	h.logger.Errorf("conflict response", "method", r.Method, "path", r.URL.Path, "error", err.Error())
-
+	h.logger.Errorw("conflict response", "method", r.Method, "path", r.URL.Path, "error", err.Error())
+	
 	writeJSONError(w, http.StatusConflict, err.Error())
 }
 
