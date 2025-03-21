@@ -1,0 +1,89 @@
+{"level":"info","ts":"2025-03-20 15:37:20","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-20 15:37:20","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-20 15:41:27","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-20 15:41:27","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-20 15:41:30","caller":"handlers/respond.go:11","msg":"internal error","service":"gua","method":"GET","path":"/admin/courses","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.name, \n\t\tco.image, \n\t\tco.recommended, \n\t\tco.introductory, \n\t\tco.content, \n\t\tco.' at line 3"}
+{"level":"info","ts":"2025-03-20 15:41:58","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-20 15:41:58","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-20 15:42:00","caller":"handlers/respond.go:11","msg":"internal error","service":"gua","method":"GET","path":"/admin/courses","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'u.username,\n    \tca.name AS category_name\n\tFROM \n\t\tcourses co\n\tLEFT JOIN \n\t\tuser' at line 14"}
+{"level":"info","ts":"2025-03-20 15:42:12","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-20 15:42:12","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-21 00:47:57","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-21 00:47:57","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"warn","ts":"2025-03-21 00:48:06","caller":"handlers/respond.go:36","msg":"not found error","service":"gua","method":"DELETE","path":"/admin/categories/100","error":"ID 100 的分类不存在"}
+{"level":"info","ts":"2025-03-21 02:56:31","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-21 02:56:31","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-21 02:57:07","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-21 02:57:07","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-21 02:58:26","caller":"handlers/respond.go:11","msg":"internal error","service":"gua","method":"GET","path":"/admin/chapters","error":"sql: Scan error on column index 8, name \"updated_at\": unsupported Scan, storing driver.Value type <nil> into type *time.Time"}
+{"level":"info","ts":"2025-03-21 02:59:07","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-21 02:59:07","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-21 02:59:10","caller":"handlers/respond.go:11","msg":"internal error","service":"gua","method":"GET","path":"/admin/chapters","error":"Error 1054 (42S22): Unknown column 'co.course_id' in 'where clause'"}
+{"level":"info","ts":"2025-03-21 02:59:37","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-21 02:59:37","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-21 02:59:40","caller":"handlers/respond.go:11","msg":"internal error","service":"gua","method":"GET","path":"/admin/chapters","error":"sql: Scan error on column index 8, name \"updated_at\": unsupported Scan, storing driver.Value type <nil> into type *time.Time"}
+{"level":"info","ts":"2025-03-21 03:00:50","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-21 03:00:50","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-22 02:39:57","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 02:39:57","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-22 02:41:06","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 02:41:06","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"warn","ts":"2025-03-22 02:41:11","caller":"handlers/respond.go:20","msg":"bad request%!(EXTRA string=method, string=POST, string=path, string=/admin/auth/sign_in, string=error, string=json: unknown field \"login\")","service":"gua"}
+{"level":"info","ts":"2025-03-22 02:41:42","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 02:41:42","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-22 02:42:49","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 02:42:49","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-22 02:44:41","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 02:44:41","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-22 02:45:33","caller":"app/app.go:57","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 02:45:33","caller":"app/app.go:62","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-22 02:51:29","caller":"app/app.go:69","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 02:51:29","caller":"app/app.go:74","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-22 02:52:48","caller":"zap@v1.27.0/sugar.go:263","msg":"Ignored key without a value.","service":"gua","ignored":"error"}
+{"level":"warn","ts":"2025-03-22 02:52:48","caller":"handlers/respond.go:54","msg":"forbidden","service":"gua","method":"POST","path":"/admin/auth/sign_in"}
+{"level":"info","ts":"2025-03-22 03:07:43","caller":"app/app.go:69","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:07:43","caller":"app/app.go:74","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"warn","ts":"2025-03-22 03:07:46","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is missing)","service":"gua"}
+{"level":"error","ts":"2025-03-22 03:09:16","caller":"zap@v1.27.0/sugar.go:263","msg":"Ignored key without a value.","service":"gua","ignored":"error"}
+{"level":"warn","ts":"2025-03-22 03:09:16","caller":"handlers/respond.go:54","msg":"forbidden","service":"gua","method":"POST","path":"/admin/auth/sign_in"}
+{"level":"warn","ts":"2025-03-22 03:09:43","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is missing)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:09:49","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is missing)","service":"gua"}
+{"level":"error","ts":"2025-03-22 03:10:23","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"GET","path":"/admin/notices","error":"failed to get userID from claims"}
+{"level":"error","ts":"2025-03-22 03:12:51","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"GET","path":"/admin/notices","error":"failed to parse token, token signature is invalid: signature is invalid"}
+{"level":"info","ts":"2025-03-22 03:16:38","caller":"app/app.go:69","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:16:38","caller":"app/app.go:74","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-22 03:16:43","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"POST","path":"/admin/auth/sign_in","error":"failed to sign token with secret, the requested hash function is unavailable"}
+{"level":"error","ts":"2025-03-22 03:30:09","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"POST","path":"/admin/auth/sign_in","error":"failed to sign token with secret, the requested hash function is unavailable"}
+{"level":"info","ts":"2025-03-22 03:31:56","caller":"app/app.go:72","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:31:56","caller":"app/app.go:77","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-22 03:32:37","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"GET","path":"/admin/notices","error":"failed to get userID from claims"}
+{"level":"info","ts":"2025-03-22 03:33:28","caller":"app/app.go:72","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:33:28","caller":"app/app.go:77","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-22 03:33:31","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"GET","path":"/admin/notices","error":"failed to get userID from claims"}
+{"level":"info","ts":"2025-03-22 03:35:29","caller":"app/app.go:72","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:35:29","caller":"app/app.go:77","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-22 03:35:31","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"GET","path":"/admin/notices","error":"failed to get userID from claims"}
+{"level":"info","ts":"2025-03-22 03:37:16","caller":"app/app.go:72","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:37:16","caller":"app/app.go:77","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-22 03:37:19","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"GET","path":"/admin/notices","error":"failed to get userID from claims"}
+{"level":"info","ts":"2025-03-22 03:38:01","caller":"app/app.go:72","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:38:01","caller":"app/app.go:77","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"error","ts":"2025-03-22 03:41:00","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"GET","path":"/admin/notices","error":"failed to parse token, token is malformed: token contains an invalid number of segments"}
+{"level":"error","ts":"2025-03-22 03:41:07","caller":"handlers/respond.go:12","msg":"internal error","service":"gua","method":"GET","path":"/admin/notices","error":"failed to parse token, token is malformed: token contains an invalid number of segments"}
+{"level":"warn","ts":"2025-03-22 03:41:32","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:43:14","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:43:25","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:43:28","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:44:10","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:44:18","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:45:53","caller":"app/app.go:72","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:45:53","caller":"app/app.go:77","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"info","ts":"2025-03-22 03:46:25","caller":"app/app.go:72","msg":"database connected","service":"gua"}
+{"level":"info","ts":"2025-03-22 03:46:25","caller":"app/app.go:77","msg":"server has started","service":"gua","addr":"10005"}
+{"level":"warn","ts":"2025-03-22 03:46:39","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:46:40","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:48:07","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:48:11","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:48:15","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:48:27","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}
+{"level":"warn","ts":"2025-03-22 03:48:29","caller":"handlers/respond.go:66","msg":"unauthorized error%!(EXTRA string=method, string=GET, string=path, string=/admin/notices, string=error, string=authorization header is malformed)","service":"gua"}

@@ -129,8 +129,10 @@ func countCourse(ctx context.Context, tx *sql.Tx, categoryId int64) error {
 func deleteCategory(ctx context.Context, tx *sql.Tx, categoryId int64) error {
 	
 	stmt := `
-		DELETE FROM categories
-		WHERE id = ?
+		DELETE FROM 
+			categories
+		WHERE 
+			id = ?
 	`
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
@@ -145,7 +147,7 @@ func deleteCategory(ctx context.Context, tx *sql.Tx, categoryId int64) error {
 		return err
 	}
 	if rowsAffected == 0 {
-		return ErrNotFound
+		return ErrNoRecord
 	}
 
 	return nil

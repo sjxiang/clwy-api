@@ -99,7 +99,7 @@ func (h *Handler) AddCategory(w http.ResponseWriter, r *http.Request) {
 			case db.ErrAlreadyExists:
 			h.badRequestResponse(w, r, errors.New("当前分类有课程, 无法删除。"))
 			return
-		case db.ErrNotFound:
+		case db.ErrNoRecord:
 			h.notFoundResponse(w, r, fmt.Errorf("ID %d 的分类不存在", id))
 			return
 		default:

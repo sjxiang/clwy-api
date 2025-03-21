@@ -4,7 +4,8 @@ import (
 	"net/http"
 )
 
-// 500 
+
+// 500 服务器错误
 // 服务器开小差啦, 稍后再来试一试 
 // 数据库繁忙, 请稍后再试
 func (h *Handler) internalServerError(w http.ResponseWriter, r *http.Request, err error) {
@@ -14,8 +15,7 @@ func (h *Handler) internalServerError(w http.ResponseWriter, r *http.Request, er
 }
 
 
-// 400
-// 无效的请求
+// 400 请求参数错误
 func (h *Handler) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
 	h.logger.Warnf("bad request", "method", r.Method, "path", r.URL.Path, "error", err.Error())
 
@@ -30,8 +30,7 @@ func (h *Handler) conflictResponse(w http.ResponseWriter, r *http.Request, err e
 	writeJSONError(w, http.StatusConflict, err.Error())
 }
 
-// 404
-// 记录不存在
+// 404 资源不存在
 func (h *Handler) notFoundResponse(w http.ResponseWriter, r *http.Request, err error) {
 	h.logger.Warnw("not found error", "method", r.Method, "path", r.URL.Path, "error", err.Error())
 
@@ -58,8 +57,7 @@ func (h *Handler) notPermittedResponse(w http.ResponseWriter, r *http.Request) {
 }
 
 
-// 401
-// 认证错误
+// 401 认证失败
 // 未携带凭证 authentication required 
 // 凭证格式错误
 // 凭证过期 invalid or expired authentication token

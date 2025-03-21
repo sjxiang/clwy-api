@@ -89,6 +89,24 @@ VALUES
 
 
 
+-- 创建 settings 表
+CREATE TABLE `settings` (
+    `id` integer unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
+    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目名称',
+    `icp` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '备案号',
+    `copyright` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '版权信息',
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+        
+INSERT INTO `settings` 
+    (`id`, `name`, `icp`, `copyright`) 
+VALUES 
+    (1, '长乐未央课程网站', '苏ICP备123456789号', '© 2025 长乐未央课程网站 版权所有');
+
+
 -- 创建 categories 表
 
 CREATE TABLE `categories` (
@@ -110,23 +128,6 @@ VALUES
     (13, '服务器运维', 4), 
     (14, '测试', 5);
 
-
--- 创建 settings 表
-CREATE TABLE `settings` (
-    `id` integer unsigned NOT NULL AUTO_INCREMENT COMMENT '编号',
-    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目名称',
-    `icp` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '备案号',
-    `copyright` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '版权信息',
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-        
-INSERT INTO `settings` 
-    (`id`, `name`, `icp`, `copyright`) 
-VALUES 
-    (1, '长乐未央课程网站', '苏ICP备123456789号', '© 2025 长乐未央课程网站 版权所有');
 
 
 
@@ -154,14 +155,10 @@ CREATE TABLE `courses` (
 INSERT INTO `courses`
     (`id`, `category_id`, `user_id`, `name`, `image`, `recommended`, `introductory`, `content`, `likes_count`, `chapters_count`, `created_at`, `updated_at`)    
 VALUES
-    (1, 10, 6, 
-    'Electron+Vue3+AI+云存储--实战跨平台桌面应用', 
-    'default.jpeg', 1, 1, 
+    (1, 10, 6, 'Electron+Vue3+AI+云存储--实战跨平台桌面应用', 'default.jpeg', 1, 1, 
     '无论前端、后端，还是应届生，只要具备前端基础，想系统掌握Electron，及整合开发中疑难问题解决方案的，并希望将理论转化实践的，这门课程是你的不二之选。课程融合Electron、Vue3、AI及云存储，以项目为驱动，从零打造跨平台、智能化、高安全性及扩展性的桌面应用。全面应用并高效掌握Electron，及与主流技术整合的疑难问题解决。无论晋升涨薪、技能拓展，还是面试求职，都能让你在激烈竞争中脱颖而出！', 
     9, 60, UTC_TIMESTAMP(), NULL),
-    (2, 11, 6, 
-    'AI助手Copilot辅助Go+Flutter打造全栈式在线教育系统', 
-    'default.jpeg', 1, 1, 
+    (2, 11, 6, 'AI助手Copilot辅助Go+Flutter打造全栈式在线教育系统', 'default.jpeg', 1, 1, 
     '无论是做后端、还是前端，缺乏大型项目实战经验都是技术进阶和职业晋升一大拦路虎。为了帮助大家突破技术与职业瓶颈，课程采用了高性能热门Go语言、跨平台利器Flutter及强大的PostgreSQL数据库，手把手带你打造一款大型功能全面的全栈在线教育系统（涵盖20+核心功能实现、30+复杂页面设计），同时教你借助AI，10倍+提升开发与学习效能。无论是毕设、求职、晋升、转型还是拓宽技术视野，都能让你受益匪浅。', 
     10, 88, UTC_TIMESTAMP(), NULL);
 
@@ -181,6 +178,23 @@ CREATE TABLE `chapters` (
     PRIMARY KEY (`id`),
     KEY `idx_course_id` (`course_id`)
 )  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `chapters`
+    (`id`, `course_id`, `title`, `content`, `video`, `rank`)
+VALUES
+    (1, 1, '第1章 Electron桌面应用实战--课程导学', '1-1 课程导学', 'default.mp4', 1),
+    (2, 1, '第2章 开启项目前的准备工作', '2-1 项目需求分析', 'default.mp4', 2),
+    (3, 1, '第2章 开启项目前的准备工作', '2-2 桌面端跨平台开发框架介绍', 'default.mp4', 3),
+    (4, 1, '第2章 开启项目前的准备工作', '2-3 技术栈选型介绍', 'default.mp4', 4),
+    (5, 2, '第1章 在线教育系统--课程导学 ', '1-1 在线教学系统--课程导学', 'default.mp4', 1),
+    (6, 2, '第2章 项目介绍与开发环境配置 ', '2-1 在线教育系统项目效果演示', 'default.mp4', 2),
+    (7, 2, '第2章 项目介绍与开发环境配置 ', '2-2 在线教育系统技术选型', 'default.mp4', 3),
+    (8, 2, '第2章 项目介绍与开发环境配置 ', '2-3 在线教育系统项目代码预览', 'default.mp4', 4),
+    (9, 2, '第2章 项目介绍与开发环境配置 ', '2-4 人工智能编程助手--GitHub Copilot 配置', 'default.mp4', 5),
+    (10, 2, '第2章 项目介绍与开发环境配置 ', '2-5 Flutter 本地开发环境配置', 'default.mp4', 6),
+    (11, 2, '第2章 项目介绍与开发环境配置 ', '2-6 Go 本地开发环境配置', 'default.mp4', 7),
+    (12, 2, '第2章 项目介绍与开发环境配置 ', '2-7 项目介绍与开发环境配置总结', 'default.mp4', 8);
+
 
 
 -- 创建 likes 表

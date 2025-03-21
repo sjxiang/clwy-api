@@ -50,8 +50,9 @@ type Course struct {
 	CategoryID    int64     `json:"category_id"`    // 课程分类
 	UserID        int64     `json:"user_id"`        // 课程讲师
 	
-	Author        User      `json:"author"`         // 课程的作者
-	Category      Category  `json:"category"`       // 课程的分类
+	// 关联
+	Author        string    `json:"author,omitempty"`         // 课程的作者
+	CategoryName  string    `json:"category,omitempty"`       // 课程的分类
 
 	Chapters      []Chapter `json:"chapters,omitempty"`       // 课程的章节
 }
@@ -65,13 +66,15 @@ func (c *Course) TableName() string {
 type Chapter struct {
 	ID            int64     `json:"id"`
 	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	UpdatedAt     *time.Time `json:"updated_at"`
 	
-	CourseID      int64     `json:"course_id"`
 	Title         string    `json:"title"`
 	Content       string    `json:"content"`
 	Video         string    `json:"video"`
 	Rank          int64     `json:"rank"`
+	
+	CourseID      int64     `json:"course_id"`
+	CourseName    string    `json:"course_name"`
 }
 func (c *Chapter) TableName() string {
 	return "chapters"

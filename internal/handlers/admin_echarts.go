@@ -7,7 +7,7 @@ import (
 
 
 /*
- * 统计用户性别
+ * 统计_用户性别
  * GET /admin/echarts/sex
  */
 func (h *Handler) CountGenders(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +24,7 @@ func (h *Handler) CountGenders(w http.ResponseWriter, r *http.Request) {
 
 
 /*
- * 统计每个月的注册用户数量
+ * 统计_每个月的注册用户数量
  * GET /admin/echarts/user
  */
 func (h *Handler) CountUser(w http.ResponseWriter, r *http.Request) {

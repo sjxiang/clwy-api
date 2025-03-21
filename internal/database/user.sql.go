@@ -226,14 +226,14 @@ func (d *DB) GetUser(ctx context.Context, id int64) (*User, error) {
 	return &item, nil
 }
 
-func (d *DB) GetUserByEmail(ctx context.Context, email string) (*User, error) {
+func (d *DB) GetUserByLogin(ctx context.Context, login string) (*User, error) {
 	query := `
 		SELECT 
-			email, username, nickname, password, avatar, sex, company, intro, role, created_at, updated_at 
+			id, email, username, nickname, password, avatar, sex, company, intro, role, created_at, updated_at 
 		FROM 
 			users
 		WHERE 
-			email = ?
+			email = ? OR username = ?
 		LIMIT 
 			1
 	`
@@ -241,11 +241,12 @@ func (d *DB) GetUserByEmail(ctx context.Context, email string) (*User, error) {
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
-	row := d.db.QueryRowContext(ctx, query, email)
+	row := d.db.QueryRowContext(ctx, query, login, login)
 	
 	var item User
 
 	err := row.Scan(
+		&item.ID,
 		&item.Email,
 		&item.Username,
 		&item.Nickname,
@@ -267,49 +268,6 @@ func (d *DB) GetUserByEmail(ctx context.Context, email string) (*User, error) {
 	}
 
 	return &item, nil	
-}
-
-func (d *DB) GetUserByUsername(ctx context.Context, username string) (*User, error) {
-	query := `
-		SELECT 
-			email, username, nickname, password, avatar, sex, company, intro, role, created_at, updated_at 
-		FROM 
-			users
-		WHERE 
-			username = ?
-		LIMIT
-			1
-	`
-
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
-	defer cancel()
-
-	row := d.db.QueryRowContext(ctx, query, username)
-	
-	var item User
-
-	err := row.Scan(
-		&item.Email,
-		&item.Username,
-		&item.Nickname,
-		&item.Password,
-		&item.Avatar,
-		&item.Sex,
-		&item.Company,
-		&item.Intro,
-		&item.Role,
-		&item.CreatedAt,
-		&item.UpdatedAt,
-	)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrNoRecord
-		}
-		
-		return nil, err
-	}
-
-	return &item, nil
 }
 
 

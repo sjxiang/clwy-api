@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/cors"
 	"go.uber.org/zap"
 
+	"clwy-api/internal/auth"
 	db "clwy-api/internal/database"
 )
 
@@ -16,13 +17,15 @@ type Handler struct {
 	router *chi.Mux
 	logger *zap.SugaredLogger
 	db     *db.DB
+	authn   auth.Authenticator
 }
 
-func New(db *db.DB, logger *zap.SugaredLogger) *Handler {
+func New(db *db.DB, logger *zap.SugaredLogger, authn auth.Authenticator) *Handler {
 	return &Handler{
 		router: chi.NewRouter(),
 		db: db,
 		logger: logger,
+		authn: authn,
 	}
 }
 
@@ -56,6 +59,8 @@ func (h *Handler) SetupRoutes() {
 
 		r.Route("/notices", func(r chi.Router) {
 			
+			r.Use(h.AuthTokenMiddleware)
+
 			// 公告列表
 			r.Get("/", h.AllNotices)  
 			// 公告详情
@@ -93,7 +98,7 @@ func (h *Handler) SetupRoutes() {
 		})
 
 		r.Route("/chapters", func(r chi.Router) {
-		
+			r.Get("/", h.AllChapters)
 		})
 
 		r.Route("/users", func(r chi.Router) {
@@ -117,44 +122,15 @@ func (h *Handler) SetupRoutes() {
 			r.Get("/user", h.CountUser)
 		})
 
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/sign_in", h.SignIn)
+		})
+
+	
 	})
 
-
-		// r.Route("/posts", func(r chi.Router) {
-		// 	r.Use(app.AuthTokenMiddleware)
-		// 	r.Post("/", app.createPostHandler)
-
-		// 	r.Route("/{postID}", func(r chi.Router) {
-		// 		r.Use(app.postsContextMiddleware)
-		// 		r.Get("/", app.getPostHandler)
-
-		// 		r.Patch("/", app.checkPostOwnership("moderator", app.updatePostHandler))
-		// 		r.Delete("/", app.checkPostOwnership("admin", app.deletePostHandler))
-		// 	})
-		// })
-
-		// r.Route("/users", func(r chi.Router) {
-		// 	r.Put("/activate/{token}", app.activateUserHandler)
-
-		// 	r.Route("/{userID}", func(r chi.Router) {
-		// 		r.Use(app.AuthTokenMiddleware)
-
-		// 		r.Get("/", app.getUserHandler)
-		// 		r.Put("/follow", app.followUserHandler)
-		// 		r.Put("/unfollow", app.unfollowUserHandler)
-		// 	})
-
-		// 	r.Group(func(r chi.Router) {
-		// 		r.Use(app.AuthTokenMiddleware)
-		// 		r.Get("/feed", app.getUserFeedHandler)
-		// 	})
-		// })
-
-		// // Public routes
-		// r.Route("/authentication", func(r chi.Router) {
-		// 	r.Post("/user", app.registerUserHandler)
-		// 	r.Post("/token", app.createTokenHandler)
-		// })
+	// public route
+	
 }
 
 func (h *Handler) StartServer() error {

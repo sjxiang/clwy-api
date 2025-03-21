@@ -1,25 +1,27 @@
 package handlers
 
-// import (
-// 	"context"
-// 	"net/http"
+import (
+	"fmt"
+	"net/http"
 
-// 	"edu/internal/models"
-// )
+	db "clwy-api/internal/database"
+)
 
-// type contextKey string
+type ctxKey string
 
-// const userContextKey contextKey = "user"
 
-// func (h *Handler) ContextSetUser(r *http.Request, user *models.User) *http.Request {
-// 	ctx := context.WithValue(r.Context(), userContextKey, user)
-// 	return r.WithContext(ctx)
-// }
+const (
+	userKey ctxKey = "user"
+)
 
-// func (h *Handler) ContextGetUser(r *http.Request) *models.User {
-// 	user, ok := r.Context().Value(userContextKey).(*models.User)
-// 	if !ok {
-// 		panic("missing user value in request context")
-// 	}
-// 	return user
-// }
+// 从请求中获取当前用户信息
+
+func getUserFromContext(r *http.Request) (*db.User, error) {
+	v, ok := r.Context().Value(userKey).(*db.User)
+
+	if !ok {
+		return nil, fmt.Errorf("user not found")  // 类型断言失败
+	}
+
+	return v, nil 
+}

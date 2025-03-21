@@ -112,21 +112,31 @@ type CoursesPaginationResult struct {
 func (d *DB) FindAndCountAllCourses(ctx context.Context, arg FindAndCountAllCoursesParams) (*CoursesPaginationResult, error) {
 
 	stmt := `
-	SELECT 
-	    c.name, c.image, c.recommended, c.introductory, c.content, c.likes_count, c.chapters_count,
-    	c.category_id, c.user_id,
+	SELECT
+		co.id, 
+	    co.name, 
+		co.image, 
+		co.recommended, 
+		co.introductory, 
+		co.content, 
+		co.likes_count, 
+		co.chapters_count,
+    	co.category_id, 
+		co.user_id,
+		co.created_at AS course_created, 
+		co.updated_at AS course_updated,
 		u.username,
     	ca.name AS category_name
 	FROM 
-		courses c
+		courses co
 	LEFT JOIN 
-		users u ON c.user_id = u.id
+		users u ON co.user_id = u.id
 	LEFT JOIN 
-		categories ca ON c.category_id = ca.id
+		categories ca ON co.category_id = ca.id
 	WHERE 
-		c.name LIKE ? AND  -- 单个参数占位符
-		c.recommended = ? AND
-		c.introductory = ?
+		co.name LIKE ? AND  -- 单个参数占位符
+		co.recommended = ? AND
+		co.introductory = ?
 	LIMIT 
 		?, ?
 	`
@@ -147,6 +157,7 @@ func (d *DB) FindAndCountAllCourses(ctx context.Context, arg FindAndCountAllCour
 		var i Course
 
 		if err := rows.Scan(
+			&i.ID,
 			&i.Name,
 			&i.Image,
 			&i.Recommended,
@@ -156,8 +167,10 @@ func (d *DB) FindAndCountAllCourses(ctx context.Context, arg FindAndCountAllCour
 			&i.ChaptersCount,
 			&i.CategoryID,
 			&i.UserID,
-			&i.Author.Username,
-			&i.Category.Name,	
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Author,
+			&i.CategoryName,	
 		); err != nil {
 			return nil, err
 		}
